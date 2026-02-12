@@ -53,6 +53,7 @@ function M.start(config)
   local bufnr = vim.fn.bufadd(file_path)
   vim.fn.bufload(bufnr)
   vim.bo[bufnr].buflisted = false
+  vim.bo[bufnr].filetype = "markdown"
 
   M.state = {
     active = true,
