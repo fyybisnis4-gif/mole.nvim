@@ -24,7 +24,8 @@ function M.start(config)
   if type(name) == "function" then
     name = name()
   end
-  if not name or name == "" then
+  local is_default_name = not name or name == ""
+  if is_default_name then
     name = "session_" .. os.date("%Y-%m-%d_%H-%M-%S")
   end
 
@@ -32,8 +33,10 @@ function M.start(config)
   local file_path = config.session_dir .. "/" .. filename
   local cwd = vim.fn.getcwd()
 
+  local title = is_default_name and ("Session — " .. os.date("%b %d, %Y %I:%M %p")) or name
+
   local header = {
-    "# " .. name,
+    "# " .. title,
     "",
     "**Started:** " .. os.date("%Y-%m-%d %H:%M:%S"),
     "**Project:** " .. cwd,
