@@ -1,0 +1,147 @@
+# mole.nvim
+
+<img width="1142" height="865" alt="mole" src="https://github.com/user-attachments/assets/704fed19-b389-414b-952d-998d55f83207" />
+
+&nbsp;
+
+like moleskine, or a mole (that's watching your moves).
+
+code annotation sessions for neovim. select code, jot a note, and build a markdown file of annotations as you debug or trace a complex flow in your code.
+
+## how it works
+
+1. start a session — a markdown file is created and shown in a side panel
+2. select code in visual mode and hit the annotate keybinding
+3. an inline popup appears — type your note and press `<CR>` to save, `<Esc>` to cancel
+4. annotations are appended to the session file as a markdown list
+5. stop the session when you're done
+
+each annotation records the file path and line range. press `<Tab>` in the input popup to toggle between **location** mode (reference only) and **snippet** mode (includes the selected code in a fenced block).
+
+## requirements
+
+- neovim >= 0.9
+- [nui.nvim](https://github.com/MunifTanjim/nui.nvim)
+
+## installation
+
+### lazy.nvim
+
+```lua
+{
+  "zion-off/mole.nvim",
+  dependencies = { "MunifTanjim/nui.nvim" },
+  opts = {},
+}
+```
+
+
+### packer.nvim
+
+```lua
+use {
+  "your-username/mole.nvim",
+  requires = { "MunifTanjim/nui.nvim" },
+  config = function()
+    require("mole").setup({})
+  end,
+}
+```
+
+### mini.deps
+
+```lua
+MiniDeps.add({
+  source = "your-username/mole.nvim",
+  depends = { "MunifTanjim/nui.nvim" },
+})
+require("mole").setup({})
+```
+
+### manual
+
+clone the repo into your neovim packages directory:
+
+```sh
+git clone https://github.com/your-username/mole.nvim \
+  ~/.local/share/nvim/site/pack/plugins/start/mole.nvim
+```
+
+then add `require("mole").setup({})` to your config. make sure [nui.nvim](https://github.com/MunifTanjim/nui.nvim) is also installed.
+
+## configuration
+
+these are the defaults — pass any overrides to `setup()`:
+
+```lua
+require("mole").setup({
+  -- where session files are saved
+  session_dir = "~/.mole",
+
+  -- "location" = file path + line range
+  -- "snippet" = file path + line range + selected text in a fenced code block
+  capture_mode = "location",
+
+  -- open the side panel automatically when starting a session
+  auto_open_panel = true,
+
+  -- custom session name: nil = timestamp, string = fixed name, function = called to get name
+  session_name = nil,
+
+  -- show vim.notify messages
+  notify = true,
+
+  -- keybindings
+  keys = {
+    annotate = "<leader>ma",       -- visual mode
+    start_session = "<leader>ms",  -- normal mode
+    stop_session = "<leader>mq",   -- normal mode
+    toggle_window = "<leader>mw",  -- normal mode
+  },
+
+  -- side panel
+  window = {
+    width = 0.3, -- fraction of editor width
+  },
+
+  -- inline input popup
+  input = {
+    width = 50,
+    border = "rounded",
+  },
+})
+```
+
+## commands & keybindings
+
+| command / key | mode | description |
+|---|---|---|
+| `:MoleStart` | normal | start a new annotation session |
+| `:MoleStop` | normal | stop the current session |
+| `:MoleToggle` | normal | toggle the side panel |
+| `<leader>ma` | visual | annotate the current selection |
+
+## output format
+
+annotations are saved as markdown. in **location** mode:
+
+```markdown
+- **`src/main.lua:12-18`** — TODO: refactor this loop
+```
+
+in **snippet** mode:
+
+~~~~markdown
+- **`src/main.lua:12-18`** — TODO: refactor this loop
+  ```lua
+  for i = 1, #items do
+    process(items[i])
+  end
+  ```
+~~~~
+
+session files are stored in `~/.mole/` by default.
+
+## license
+
+MIT
