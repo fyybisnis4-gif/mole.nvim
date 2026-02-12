@@ -7,7 +7,7 @@ M.defaults = {
   -- What to capture from the visual selection:
   --   "location" => file path + line range
   --   "snippet"  => file path + line range + selected text in fenced code block
-  capture_mode = "location",
+  capture_mode = "snippet",
 
   -- Open the side panel automatically when starting a session
   auto_open_panel = true,

@@ -80,7 +80,7 @@ require("mole").setup({
 
   -- "location" = file path + line range
   -- "snippet" = file path + line range + selected text in a fenced code block
-  capture_mode = "location",
+  capture_mode = "snippet",
 
   -- open the side panel automatically when starting a session
   auto_open_panel = true,
