@@ -1,0 +1,28 @@
+name: lint
+
+on:
+  push:
+    branches: [main]
+  pull_request_review:
+    types: [submitted]
+
+jobs:
+  authorize:
+    if: >-
+      github.event_name == 'push' ||
+      (github.event.review.state == 'approved' &&
+       contains(fromJSON('["OWNER", "COLLABORATOR"]'), github.event.review.author_association))
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "authorized"
+
+  formatting:
+    needs: authorize
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: JohnnyMorganz/stylua-action@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          version: latest
+          args: --check lua/
