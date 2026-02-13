@@ -40,6 +40,41 @@ M.defaults = {
     width = 50,
     border = "rounded",
   },
+
+  -- Callback functions that return the lines written to the session file
+  -- Each receives relevant context and must return a table of strings (lines)
+  format = {
+    header = function(info)
+      return {
+        "# " .. info.title,
+        "",
+        "**File:** " .. info.file_path,
+        "**Started:** " .. info.timestamp,
+        "**Project:** " .. info.cwd,
+        "",
+        "---",
+        "",
+      }
+    end,
+    footer = function(info)
+      return {
+        "---",
+        "",
+        "**Ended:** " .. info.timestamp,
+      }
+    end,
+    resumed = function(info)
+      return {
+        "",
+        "---",
+        "",
+        "**Resumed:** " .. info.timestamp,
+        "",
+        "---",
+        "",
+      }
+    end,
+  },
 }
 
 function M.apply(user_config)

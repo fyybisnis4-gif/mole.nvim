@@ -35,7 +35,6 @@ each annotation records the file path and line range. press `<Tab>` in the input
 }
 ```
 
-
 ### packer.nvim
 
 ```lua
@@ -113,18 +112,57 @@ require("mole").setup({
     width = 50,
     border = "rounded",
   },
+
+  -- callbacks that return lines written to the session file
+  -- each receives an info table and must return a table of strings (lines)
+  -- return {} to skip a section entirely
+  format = {
+    -- info: { title, file_path, cwd, timestamp }
+    header = function(info)
+      return {
+        "# " .. info.title,
+        "",
+        "**File:** " .. info.file_path,
+        "**Started:** " .. info.timestamp,
+        "**Project:** " .. info.cwd,
+        "",
+        "---",
+        "",
+      }
+    end,
+    -- info: { timestamp }
+    footer = function(info)
+      return {
+        "---",
+        "",
+        "**Ended:** " .. info.timestamp,
+      }
+    end,
+    -- info: { timestamp }
+    resumed = function(info)
+      return {
+        "",
+        "---",
+        "",
+        "**Resumed:** " .. info.timestamp,
+        "",
+        "---",
+        "",
+      }
+    end,
+  },
 })
 ```
 
 ## commands & keybindings
 
-| command / key | mode | description |
-|---|---|---|
-| `:MoleStart` | normal | start a new annotation session |
-| `:MoleStop` | normal | stop the current session |
-| `:MoleResume` | normal | resume a previous session |
-| `:MoleToggle` | normal | toggle the side panel |
-| `<leader>ma` | visual | annotate the current selection |
+| command / key | mode   | description                    |
+| ------------- | ------ | ------------------------------ |
+| `:MoleStart`  | normal | start a new annotation session |
+| `:MoleStop`   | normal | stop the current session       |
+| `:MoleResume` | normal | resume a previous session      |
+| `:MoleToggle` | normal | toggle the side panel          |
+| `<leader>ma`  | visual | annotate the current selection |
 
 ## output format
 
@@ -136,14 +174,14 @@ annotations are saved as markdown. in **location** mode:
 
 in **snippet** mode:
 
-~~~~markdown
+````markdown
 - **`src/main.lua:12-18`** — TODO: refactor this loop
   ```lua
   for i = 1, #items do
     process(items[i])
   end
   ```
-~~~~
+````
 
 session files are stored in `~/.local/share/nvim/mole/` by default (follows XDG via `stdpath("data")`).
 

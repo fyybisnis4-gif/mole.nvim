@@ -35,16 +35,12 @@ function M.start(config)
 
   local title = is_default_name and ("Session — " .. os.date("%b %d, %Y %I:%M %p")) or name
 
-  local header = {
-    "# " .. title,
-    "",
-    "**File:** " .. file_path,
-    "**Started:** " .. os.date("%Y-%m-%d %H:%M:%S"),
-    "**Project:** " .. cwd,
-    "",
-    "---",
-    "",
-  }
+  local header = config.format.header({
+    title = title,
+    file_path = file_path,
+    cwd = cwd,
+    timestamp = os.date("%Y-%m-%d %H:%M:%S"),
+  })
 
   local f = io.open(file_path, "w")
   if not f then
@@ -83,11 +79,9 @@ function M.stop(config)
 
   local bufnr = M.state.bufnr
   if bufnr and vim.api.nvim_buf_is_valid(bufnr) then
-    local footer = {
-      "---",
-      "",
-      "**Ended:** " .. os.date("%Y-%m-%d %H:%M:%S"),
-    }
+    local footer = config.format.footer({
+      timestamp = os.date("%Y-%m-%d %H:%M:%S"),
+    })
     local line_count = vim.api.nvim_buf_line_count(bufnr)
     vim.api.nvim_buf_set_lines(bufnr, line_count, line_count, false, footer)
     vim.api.nvim_buf_call(bufnr, function()
@@ -121,15 +115,9 @@ function M.resume(config, file_path)
   vim.bo[bufnr].buflisted = false
   vim.bo[bufnr].filetype = "markdown"
 
-  local marker = {
-    "",
-    "---",
-    "",
-    "**Resumed:** " .. os.date("%Y-%m-%d %H:%M:%S"),
-    "",
-    "---",
-    "",
-  }
+  local marker = config.format.resumed({
+    timestamp = os.date("%Y-%m-%d %H:%M:%S"),
+  })
   local line_count = vim.api.nvim_buf_line_count(bufnr)
   vim.api.nvim_buf_set_lines(bufnr, line_count, line_count, false, marker)
   vim.api.nvim_buf_call(bufnr, function()
