@@ -76,7 +76,7 @@ these are the defaults — pass any overrides to `setup()`:
 ```lua
 require("mole").setup({
   -- where session files are saved
-  session_dir = "~/.mole",
+  session_dir = vim.fn.stdpath("data") .. "/mole", -- ~/.local/share/nvim/mole
 
   -- "location" = file path + line range
   -- "snippet" = file path + line range + selected text in a fenced code block
@@ -140,7 +140,7 @@ in **snippet** mode:
   ```
 ~~~~
 
-session files are stored in `~/.mole/` by default.
+session files are stored in `~/.local/share/nvim/mole/` by default (follows XDG via `stdpath("data")`).
 
 ## license
 

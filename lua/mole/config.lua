@@ -2,7 +2,7 @@ local M = {}
 
 M.defaults = {
   -- Directory where session markdown files are created
-  session_dir = vim.fn.expand("~/.mole"),
+  session_dir = vim.fn.stdpath("data") .. "/mole",
 
   -- What to capture from the visual selection:
   --   "location" => file path + line range
