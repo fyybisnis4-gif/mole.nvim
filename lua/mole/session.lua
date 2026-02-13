@@ -38,6 +38,7 @@ function M.start(config)
   local header = {
     "# " .. title,
     "",
+    "**File:** " .. file_path,
     "**Started:** " .. os.date("%Y-%m-%d %H:%M:%S"),
     "**Project:** " .. cwd,
     "",
