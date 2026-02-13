@@ -91,12 +91,16 @@ require("mole").setup({
   -- show vim.notify messages
   notify = true,
 
+  -- picker for resume: "auto" (telescope → snacks → vim.ui.select), "telescope", "snacks", or "select"
+  picker = "auto",
+
   -- keybindings
   keys = {
-    annotate = "<leader>ma",       -- visual mode
-    start_session = "<leader>ms",  -- normal mode
-    stop_session = "<leader>mq",   -- normal mode
-    toggle_window = "<leader>mw",  -- normal mode
+    annotate = "<leader>ma",        -- visual mode
+    start_session = "<leader>ms",   -- normal mode
+    stop_session = "<leader>mq",    -- normal mode
+    resume_session = "<leader>mr",  -- normal mode
+    toggle_window = "<leader>mw",   -- normal mode
   },
 
   -- side panel
@@ -118,6 +122,7 @@ require("mole").setup({
 |---|---|---|
 | `:MoleStart` | normal | start a new annotation session |
 | `:MoleStop` | normal | stop the current session |
+| `:MoleResume` | normal | resume a previous session |
 | `:MoleToggle` | normal | toggle the side panel |
 | `<leader>ma` | visual | annotate the current selection |
 

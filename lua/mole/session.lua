@@ -105,6 +105,50 @@ function M.stop(config)
   notify(config, "Mole session ended", vim.log.levels.INFO)
 end
 
+function M.resume(config, file_path)
+  if M.state.active then
+    notify(config, "Mole session already active", vim.log.levels.WARN)
+    return
+  end
+
+  if vim.fn.filereadable(file_path) ~= 1 then
+    vim.notify("Session file not found: " .. file_path, vim.log.levels.ERROR)
+    return
+  end
+
+  local bufnr = vim.fn.bufadd(file_path)
+  vim.fn.bufload(bufnr)
+  vim.bo[bufnr].buflisted = false
+  vim.bo[bufnr].filetype = "markdown"
+
+  local marker = {
+    "",
+    "---",
+    "",
+    "**Resumed:** " .. os.date("%Y-%m-%d %H:%M:%S"),
+    "",
+    "---",
+    "",
+  }
+  local line_count = vim.api.nvim_buf_line_count(bufnr)
+  vim.api.nvim_buf_set_lines(bufnr, line_count, line_count, false, marker)
+  vim.api.nvim_buf_call(bufnr, function()
+    vim.cmd("silent write")
+  end)
+
+  M.state = {
+    active = true,
+    file_path = file_path,
+    bufnr = bufnr,
+  }
+
+  if config.auto_open_panel then
+    require("mole.window").open(config, bufnr)
+  end
+
+  notify(config, "Mole session resumed", vim.log.levels.INFO)
+end
+
 function M.get_state()
   return M.state
 end

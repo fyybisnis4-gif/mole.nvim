@@ -31,6 +31,10 @@ function M._register_keymaps()
     M.stop_session()
   end, { desc = "Mole: Stop session" })
 
+  vim.keymap.set("n", keys.resume_session, function()
+    M.resume_session()
+  end, { desc = "Mole: Resume session" })
+
   vim.keymap.set("n", keys.toggle_window, function()
     M.toggle_window()
   end, { desc = "Mole: Toggle window" })
@@ -48,6 +52,10 @@ function M._register_commands()
   vim.api.nvim_create_user_command("MoleStop", function()
     M.stop_session()
   end, { desc = "Stop mole session" })
+
+  vim.api.nvim_create_user_command("MoleResume", function()
+    M.resume_session()
+  end, { desc = "Resume a previous mole session" })
 
   vim.api.nvim_create_user_command("MoleToggle", function()
     M.toggle_window()
@@ -69,6 +77,12 @@ end
 
 function M.stop_session()
   require("mole.session").stop(M.config)
+end
+
+function M.resume_session()
+  require("mole.picker").pick_session(M.config, function(file_path)
+    require("mole.session").resume(M.config, file_path)
+  end)
 end
 
 function M.toggle_window()

@@ -18,11 +18,15 @@ M.defaults = {
   -- Show vim.notify messages
   notify = true,
 
+  -- Picker for resume: "auto" (telescope → snacks → vim.ui.select), "telescope", "snacks", or "select"
+  picker = "auto",
+
   -- Keybindings
   keys = {
     annotate = "<leader>ma",
     start_session = "<leader>ms",
     stop_session = "<leader>mq",
+    resume_session = "<leader>mr",
     toggle_window = "<leader>mw",
   },
 
