@@ -5,6 +5,67 @@ M.state = {
   visible = false,
 }
 
+local function parse_location(line)
+  local file, start_line, end_line = line:match("`([^:]+):(%d+)-(%d+)`")
+  if file then
+    return file, tonumber(start_line), tonumber(end_line)
+  end
+
+  file, start_line = line:match("`([^:]+):(%d+)`")
+  if file then
+    return file, tonumber(start_line), tonumber(start_line)
+  end
+
+  return nil, nil, nil
+end
+
+local function find_target_win(mole_winid)
+  local wins = vim.api.nvim_tabpage_list_wins(0)
+  for _, winid in ipairs(wins) do
+    if winid ~= mole_winid then
+      return winid
+    end
+  end
+  return nil
+end
+
+local function jump_to_location()
+  local line = vim.api.nvim_get_current_line()
+  local file, start_line, _ = parse_location(line)
+
+  if not file then
+    return
+  end
+
+  local target_win = find_target_win(M.state.winid)
+  if not target_win then
+    return
+  end
+
+  vim.api.nvim_set_current_win(target_win)
+
+  local abs_path = vim.fn.fnamemodify(file, ":p")
+  local existing_buf = vim.fn.bufnr(abs_path)
+  if existing_buf ~= -1 then
+    vim.api.nvim_set_current_buf(existing_buf)
+  else
+    vim.cmd("edit " .. vim.fn.fnameescape(file))
+  end
+
+  vim.api.nvim_win_set_cursor(0, { start_line, 0 })
+  vim.cmd("normal! zz")
+end
+
+function M._setup_jump_keymaps(config, bufnr)
+  local keys = config.keys.jump_to_location
+  if type(keys) == "string" then
+    keys = { keys }
+  end
+  for _, key in ipairs(keys) do
+    vim.keymap.set("n", key, jump_to_location, { buffer = bufnr, noremap = true, silent = true })
+  end
+end
+
 function M.open(config, bufnr)
   if M.state.visible and M.state.winid and vim.api.nvim_win_is_valid(M.state.winid) then
     return
@@ -29,6 +90,8 @@ function M.open(config, bufnr)
   M.state.winid = winid
   M.state.visible = true
 
+  M._setup_jump_keymaps(config, bufnr)
+
   vim.api.nvim_create_autocmd("WinClosed", {
     pattern = tostring(winid),
     once = true,
@@ -38,7 +101,6 @@ function M.open(config, bufnr)
     end,
   })
 
-  -- Return focus to the previous window
   vim.cmd("wincmd p")
 end
 

@@ -13,7 +13,7 @@ code annotation sessions for neovim. select code, jot a note, and build a markdo
 1. start a session — a markdown file is created and shown in a side panel
 2. select code in visual mode and hit the annotate keybinding
 3. an inline popup appears — type your note and press `<CR>` to save, `<Esc>` to cancel
-4. annotations are appended to the session file as a markdown list
+4. annotations are appended to the session file as a markdown list -- hit `<CR>` on an annotation in the side panel to jump to that location in your code
 5. stop the session when you're done
 
 each annotation records the file path and line range. press `<Tab>` in the input popup to toggle between **location** mode (reference only) and **snippet** mode (includes the selected code in a fenced block).
@@ -100,6 +100,7 @@ require("mole").setup({
     stop_session = "<leader>mq",    -- normal mode
     resume_session = "<leader>mr",  -- normal mode
     toggle_window = "<leader>mw",   -- normal mode
+    jump_to_location = { "<CR>", "gd" }, -- in side panel
   },
 
   -- side panel

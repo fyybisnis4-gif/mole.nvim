@@ -28,6 +28,7 @@ M.defaults = {
     stop_session = "<leader>mq",
     resume_session = "<leader>mr",
     toggle_window = "<leader>mw",
+    jump_to_location = { "<CR>", "gd" },
   },
 
   -- Floating window appearance
