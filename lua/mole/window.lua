@@ -42,10 +42,16 @@ local function jump_to_location()
     return
   end
 
-  vim.api.nvim_set_current_win(target_win)
-
   local abs_path = vim.fn.fnamemodify(file, ":p")
   local existing_buf = vim.fn.bufnr(abs_path)
+
+  if existing_buf == -1 and vim.fn.filereadable(abs_path) ~= 1 then
+    vim.notify("File not found: " .. file, vim.log.levels.WARN)
+    return
+  end
+
+  vim.api.nvim_set_current_win(target_win)
+
   if existing_buf ~= -1 then
     vim.api.nvim_set_current_buf(existing_buf)
   else
