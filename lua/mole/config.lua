@@ -56,11 +56,11 @@ M.defaults = {
         "**Project:** " .. info.cwd,
         "",
         "---",
-        "",
       }
     end,
     footer = function(info)
       return {
+        "",
         "---",
         "",
         "**Ended:** " .. info.timestamp,

@@ -130,12 +130,12 @@ require("mole").setup({
         "**Project:** " .. info.cwd, -- used to resolve file paths when jumping to locations from a different project
         "",
         "---",
-        "",
       }
     end,
     -- info: { timestamp }
     footer = function(info)
       return {
+        "",
         "---",
         "",
         "**Ended:** " .. info.timestamp,

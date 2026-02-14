@@ -10,7 +10,7 @@ function M.append(session_state, capture_mode, selection, note)
     location = string.format("`%s:%d`", selection.file, selection.start_line)
   end
 
-  local lines = {}
+  local lines = { "" }
   if note ~= "" then
     table.insert(lines, string.format("- **%s** — %s", location, note))
   else
@@ -25,9 +25,6 @@ function M.append(session_state, capture_mode, selection, note)
     end
     table.insert(lines, "  ```")
   end
-
-  table.insert(lines, "")
-  table.insert(lines, "")
 
   local bufnr = session_state.bufnr
   local line_count = vim.api.nvim_buf_line_count(bufnr)
