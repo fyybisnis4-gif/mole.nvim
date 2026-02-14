@@ -125,7 +125,7 @@ require("mole").setup({
         "",
         "**File:** " .. info.file_path,
         "**Started:** " .. info.timestamp,
-        "**Project:** " .. info.cwd,
+        "**Project:** " .. info.cwd, -- used to resolve file paths when jumping to locations from a different project
         "",
         "---",
         "",

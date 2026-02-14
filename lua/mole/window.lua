@@ -29,6 +29,42 @@ local function find_target_win(mole_winid)
   return nil
 end
 
+local function read_project_dir(bufnr)
+  local lines = vim.api.nvim_buf_get_lines(bufnr, 0, 20, false)
+  for _, l in ipairs(lines) do
+    local dir = l:match("%*%*Project:%*%* (.+)")
+    if dir then
+      return dir
+    end
+  end
+  return nil
+end
+
+local function resolve_file(file, bufnr)
+  local abs_path = vim.fn.fnamemodify(file, ":p")
+  local buf = vim.fn.bufnr(abs_path)
+  if buf ~= -1 then
+    return abs_path, buf
+  end
+  if vim.fn.filereadable(abs_path) == 1 then
+    return abs_path, -1
+  end
+
+  local project_dir = read_project_dir(bufnr)
+  if project_dir then
+    local project_path = project_dir .. "/" .. file
+    buf = vim.fn.bufnr(project_path)
+    if buf ~= -1 then
+      return project_path, buf
+    end
+    if vim.fn.filereadable(project_path) == 1 then
+      return project_path, -1
+    end
+  end
+
+  return nil, -1
+end
+
 local function jump_to_location()
   local line = vim.api.nvim_get_current_line()
   local file, start_line, _ = parse_location(line)
@@ -42,10 +78,10 @@ local function jump_to_location()
     return
   end
 
-  local abs_path = vim.fn.fnamemodify(file, ":p")
-  local existing_buf = vim.fn.bufnr(abs_path)
+  local session_bufnr = vim.api.nvim_win_get_buf(M.state.winid)
+  local resolved, existing_buf = resolve_file(file, session_bufnr)
 
-  if existing_buf == -1 and vim.fn.filereadable(abs_path) ~= 1 then
+  if not resolved then
     vim.notify("File not found: " .. file, vim.log.levels.WARN)
     return
   end
@@ -55,11 +91,16 @@ local function jump_to_location()
   if existing_buf ~= -1 then
     vim.api.nvim_set_current_buf(existing_buf)
   else
-    vim.cmd("edit " .. vim.fn.fnameescape(file))
+    vim.cmd("edit " .. vim.fn.fnameescape(resolved))
   end
 
-  vim.api.nvim_win_set_cursor(0, { start_line, 0 })
-  vim.cmd("normal! zz")
+  local line_count = vim.api.nvim_buf_line_count(0)
+  if start_line > line_count then
+    vim.notify("Line " .. start_line .. " no longer exists in " .. file, vim.log.levels.WARN)
+  else
+    vim.api.nvim_win_set_cursor(0, { start_line, 0 })
+    vim.cmd("normal! zz")
+  end
 end
 
 function M._setup_jump_keymaps(config, bufnr)
