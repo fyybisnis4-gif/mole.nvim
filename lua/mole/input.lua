@@ -14,10 +14,14 @@ function M.show(config, default_mode, selection, callback)
     return " mole [" .. mode .. "] "
   end
 
+  local cursor_pos = vim.api.nvim_win_get_cursor(0)
+  local cursor_line = cursor_pos[1]
+  local offset = selection.end_line - cursor_line + 2
+
   local input = Input({
     relative = "cursor",
     position = {
-      row = selection.end_line - selection.start_line + 2,
+      row = offset,
       col = 0,
     },
     size = {
