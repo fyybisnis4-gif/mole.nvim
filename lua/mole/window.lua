@@ -89,9 +89,12 @@ local function jump_to_location()
   vim.api.nvim_set_current_win(target_win)
 
   if existing_buf ~= -1 then
+    vim.fn.bufload(existing_buf)
     vim.api.nvim_set_current_buf(existing_buf)
   else
-    vim.cmd("edit " .. vim.fn.fnameescape(resolved))
+    local bufnr = vim.fn.bufadd(resolved)
+    vim.fn.bufload(bufnr)
+    vim.api.nvim_set_current_buf(bufnr)
   end
 
   local line_count = vim.api.nvim_buf_line_count(0)
