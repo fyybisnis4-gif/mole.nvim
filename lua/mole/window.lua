@@ -106,21 +106,49 @@ local function jump_to_location()
   end
 end
 
-function M._setup_jump_keymaps(config, bufnr)
-  local keys = config.keys.jump_to_location
+local function next_annotation()
+  local line_count = vim.api.nvim_buf_line_count(0)
+  local cursor = vim.api.nvim_win_get_cursor(0)[1]
+  for i = cursor + 1, line_count do
+    local l = vim.api.nvim_buf_get_lines(0, i - 1, i, false)[1]
+    if parse_location(l) then
+      vim.api.nvim_win_set_cursor(0, { i, 0 })
+      return
+    end
+  end
+end
+
+local function prev_annotation()
+  local cursor = vim.api.nvim_win_get_cursor(0)[1]
+  for i = cursor - 1, 1, -1 do
+    local l = vim.api.nvim_buf_get_lines(0, i - 1, i, false)[1]
+    if parse_location(l) then
+      vim.api.nvim_win_set_cursor(0, { i, 0 })
+      return
+    end
+  end
+end
+
+local function set_keys(bufnr, keys, fn, desc)
   if not keys or keys == "" then
     return
   end
   if type(keys) ~= "string" and type(keys) ~= "table" then
-    vim.notify("mole: jump_to_location must be a string or table of strings", vim.log.levels.WARN)
+    vim.notify("mole: keymap must be a string or table of strings", vim.log.levels.WARN)
     return
   end
   if type(keys) == "string" then
     keys = { keys }
   end
   for _, key in ipairs(keys) do
-    vim.keymap.set("n", key, jump_to_location, { buffer = bufnr, noremap = true, silent = true })
+    vim.keymap.set("n", key, fn, { buffer = bufnr, noremap = true, silent = true, desc = desc })
   end
+end
+
+function M._setup_jump_keymaps(config, bufnr)
+  set_keys(bufnr, config.keys.jump_to_location, jump_to_location, "Mole: Jump to location")
+  set_keys(bufnr, config.keys.next_annotation, next_annotation, "Mole: Next annotation")
+  set_keys(bufnr, config.keys.prev_annotation, prev_annotation, "Mole: Previous annotation")
 end
 
 function M.open(config, bufnr)

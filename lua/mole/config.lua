@@ -29,6 +29,8 @@ M.defaults = {
     resume_session = "<leader>mr",
     toggle_window = "<leader>mw",
     jump_to_location = { "<CR>", "gd" },
+    next_annotation = "]a",
+    prev_annotation = "[a",
   },
 
   -- Floating window appearance

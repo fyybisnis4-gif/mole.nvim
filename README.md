@@ -101,6 +101,8 @@ require("mole").setup({
     resume_session = "<leader>mr",  -- normal mode
     toggle_window = "<leader>mw",   -- normal mode
     jump_to_location = { "<CR>", "gd" }, -- in side panel
+    next_annotation = "]a",              -- in side panel
+    prev_annotation = "[a",              -- in side panel
   },
 
   -- side panel
@@ -157,13 +159,16 @@ require("mole").setup({
 
 ## commands & keybindings
 
-| command / key | mode   | description                    |
-| ------------- | ------ | ------------------------------ |
-| `:MoleStart`  | normal | start a new annotation session |
-| `:MoleStop`   | normal | stop the current session       |
-| `:MoleResume` | normal | resume a previous session      |
-| `:MoleToggle` | normal | toggle the side panel          |
-| `<leader>ma`  | visual | annotate the current selection |
+| command / key    | mode       | description                    |
+| ---------------- | ---------- | ------------------------------ |
+| `:MoleStart`     | normal     | start a new annotation session |
+| `:MoleStop`      | normal     | stop the current session       |
+| `:MoleResume`    | normal     | resume a previous session      |
+| `:MoleToggle`    | normal     | toggle the side panel          |
+| `<leader>ma`     | visual     | annotate the current selection |
+| `<CR>` / `gd`    | side panel | jump to annotation location    |
+| `]a`             | side panel | next annotation                |
+| `[a`             | side panel | previous annotation            |
 
 ## output format
 
