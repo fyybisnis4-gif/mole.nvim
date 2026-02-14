@@ -64,6 +64,13 @@ end
 
 function M._setup_jump_keymaps(config, bufnr)
   local keys = config.keys.jump_to_location
+  if not keys or keys == "" then
+    return
+  end
+  if type(keys) ~= "string" and type(keys) ~= "table" then
+    vim.notify("mole: jump_to_location must be a string or table of strings", vim.log.levels.WARN)
+    return
+  end
   if type(keys) == "string" then
     keys = { keys }
   end
