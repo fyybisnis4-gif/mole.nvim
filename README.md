@@ -39,7 +39,7 @@ each annotation records the file path and line range. press `<Tab>` in the input
 
 ```lua
 use {
-  "your-username/mole.nvim",
+  "zion-off/mole.nvim",
   requires = { "MunifTanjim/nui.nvim" },
   config = function()
     require("mole").setup({})
@@ -51,7 +51,7 @@ use {
 
 ```lua
 MiniDeps.add({
-  source = "your-username/mole.nvim",
+  source = "zion-off/mole.nvim",
   depends = { "MunifTanjim/nui.nvim" },
 })
 require("mole").setup({})
@@ -62,7 +62,7 @@ require("mole").setup({})
 clone the repo into your neovim packages directory:
 
 ```sh
-git clone https://github.com/your-username/mole.nvim \
+git clone https://github.com/zion-off/mole.nvim \
   ~/.local/share/nvim/site/pack/plugins/start/mole.nvim
 ```
 
