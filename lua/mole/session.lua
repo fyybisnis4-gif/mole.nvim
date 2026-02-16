@@ -31,6 +31,11 @@ function M.start(config)
 
   local filename = name .. ".md"
   local file_path = config.session_dir .. "/" .. filename
+
+  if vim.fn.filereadable(file_path) == 1 then
+    return M.resume(config, file_path)
+  end
+
   local cwd = vim.fn.getcwd()
 
   local title = is_default_name and ("Session — " .. os.date("%b %d, %Y %I:%M %p")) or name
